@@ -1,0 +1,45 @@
+
+// Test output table record.
+record TestOutput
+{
+    int         trial;
+    int         identification;
+    string      sentence;
+    string      figure_file_name;
+
+    string      type;
+    string      condition;
+    string      structure;
+    string      subject;
+
+    bool        expected_answer;
+    int         observation_time;
+    int         reaction_time;
+    bool        answer;
+}
+
+
+// Test output table.
+TestOutput[..] test_output;
+
+
+//------------------------------------------------------------------------------
+
+
+// Appends one row of data to test output table.
+void test_output_append(TestOutput data)
+{
+    test_output.size = test_output.size + 1;
+    test_output[test_output.size-1] = data;
+}
+
+
+// Writes test output table contents to CSV file and clears the table.
+void test_output_save()
+{
+    // Append table to CSV file (create if non-existent). The filename format
+    // is: <dbname>/<dbnum>/<expname>/<phasename>/ses<sesid>-<tblnum>.csv
+    string fn = expdb.experiment.session.create_table(namespace_name, 1);
+    test_output.append(fn, namespace_name + ": test results");
+    test_output.size = 0;
+}

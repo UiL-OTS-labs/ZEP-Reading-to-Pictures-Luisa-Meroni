@@ -1,0 +1,221 @@
+import std_choose_1of2_page;
+
+import defs;
+import stimuli;
+import shuffle;
+import output;
+import test_page;
+
+
+Block task
+{
+    on_event:entry()
+    {
+        // Randomize test items table.
+        if (shuffle_test_items() != OK) terminate;
+    }
+
+    Part instructions
+    {
+        on_event:entry()
+        {
+            pause_page.set_text( INSTRUCTION_TEXT, true);
+
+            pause_page.action(this);
+            control.button_box.enable_all_buttons(CONTINUE);
+        }
+    }
+
+    Part instructions2
+    {
+        on_event:entry()
+        {
+            pause_page.set_text( INSTRUCTION_TEXT2, true);
+
+            pause_page.action(this);
+            control.button_box.enable_all_buttons(CONTINUE);
+        }
+    }
+
+
+    Block practice
+    {
+        TestItem        item;   // current item
+        int correct_counter;
+
+        on_event:entry()
+        {
+            correct_counter = 0;
+            num_cycles = prac_items.size;
+
+            // Prepare test page: progress bar and prompt enabled.
+            test_page.setup(num_cycles, true);
+        }
+
+
+        on_event:exit()
+        {
+            test_page.cleanup();
+            if(correct_counter < MINIMAL_CORRECT_PRACTICE)
+            {
+                println("Have not achieved the minimal correct in practice! (" + string(MINIMAL_CORRECT_PRACTICE) + ")");
+                control.stop_experiment();
+            }
+        }
+
+
+        Trial trial
+        {
+            on_event:entry()
+            {
+                item = prac_items[practice.cycle];
+
+                test_page.action(this, item, reference_time, practice.cycle);
+            }
+
+            on_event:exit()
+            {
+                if(test_page.response.choice == item.expected_answer)
+                {
+                    correct_counter = correct_counter + 1;
+                    print("  Correct Answer");
+                }
+                else
+                {
+                    print("Incorrect Answer");
+                }
+
+                println(" (" + string(correct_counter) + "/" + string(MINIMAL_CORRECT_PRACTICE) + ")" );
+            }
+        }
+    }
+
+
+    Part
+    {
+        on_event:entry()
+        {
+            blank_page.action_auto(this, 500ms);
+        }
+    }
+
+
+    Part pause
+    {
+        on_event:entry()
+        {
+            pause_page.set_text(AFTER_PRACTICE_TEXT, true);
+
+            pause_page.action(this);
+            control.button_box.enable_all_buttons(CONTINUE);
+        }
+    }
+
+
+    Block test
+    {
+        TestItem        item;   // current item
+
+
+
+        on_event:entry()
+        {
+            num_cycles = test_items.size;
+
+            // Prepare test page: progress bar enabled, prompt disabled.
+            test_page.setup(num_cycles, false);
+        }
+
+
+        on_event:exit()
+        {
+            test_page.cleanup();
+
+            // Save test output table as CSV file.
+            test_output_save();
+        }
+
+
+        Trial trial
+        {
+            on_event:entry()
+            {
+                item = test_items[test.cycle];
+            }
+
+            on_event:exit()
+            {
+                TestOutput output;
+
+                output.trial             = test.cycle;
+                output.identification    = item.identification;
+                output.sentence          = item.sentence;
+                output.figure_file_name  = item.figure_file_name;
+
+                output.type              = item.type;
+                output.condition         = item.condition;
+                output.structure         = item.structure;
+                output.subject           = item.subject;
+
+
+                output.expected_answer   = item.expected_answer;
+                output.observation_time  = test_page.segment_selection.observation_time;
+                output.reaction_time     = test_page.response.rt;
+                output.answer            = test_page.response.choice;
+
+                // Add new row to test output table.
+                test_output_append(output);
+            }
+
+
+            SubTrial presentation
+            {
+                on_event:entry()
+                {
+                    test_page.action(this, item, reference_time, test.cycle);
+                }
+            }
+
+
+            TransientPart
+            {
+                on_event:entry()
+                {
+                    if(!at_a_pause_trial())
+                        trial.leave();  // No question. Trial done.
+                }
+
+                bool at_a_pause_trial()
+                {
+                    return test.cycle == test.num_cycles/2;
+                }
+            }
+
+
+            SubTrial
+            {
+                on_event:entry()
+                {
+                    pause_page.set_text( PAUSE_TEXT, true);
+                    pause_page.action(this);
+                }
+            }
+        }
+    }
+
+    Part
+    {
+        on_event:entry()
+        {
+            blank_page.action_auto(this, 500ms);
+        }
+    }
+}
+
+
+void action(Part caller)
+{
+    // Activate the task. When the task is done, the registered caller
+    // (c.q. the main experiment object) will automatically be signalled.
+    task.enter(caller);
+}

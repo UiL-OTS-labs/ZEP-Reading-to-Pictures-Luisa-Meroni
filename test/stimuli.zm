@@ -1,0 +1,60 @@
+
+
+// Item table record.
+record TestItem
+{
+    int         identification;
+    string      sentence;
+    string      figure_file_name;
+
+    string      type;
+    string      condition;
+    string      structure;
+    string      subject;
+
+    bool        expected_answer;
+}
+
+
+// Practice item table.
+//   index: item number
+TestItem[..] prac_items;
+
+// Test item table.
+//   index: item number
+TestItem[..] test_items;
+
+
+// Loads item table(s) from CSV file(s) in the stimuli folder.
+int load_stimuli()
+{
+    // Uncomment relevant parts below to load stimuli from CSV file.
+
+    int err;
+
+//    // Load data into prac_items table.
+   err = prac_items.load(stimuli_dir() + "prac_items.csv",
+       true,           // if true, file contains a header row
+       0);             // number of lines to skip before header and data
+   if (err) return err;
+
+
+    // Load data into test_items table.
+    err = test_items.load(stimuli_dir() + "test_items.csv",
+        true,           // if true, file contains a header row
+        0);             // number of lines to skip before header and data
+    if (err) return err;
+
+    return OK;
+}
+
+
+// Saves item table(s) as CSV file(s) in the script folder.
+void save_stimuli()
+{
+    prac_items.save(script_dir() + "prac_items.csv",
+        "Practice items");
+
+    test_items.save(script_dir() + "test_items.csv",
+        "Test items");
+}

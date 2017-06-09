@@ -1,0 +1,65 @@
+//test_pseudorandomisation.zp
+
+// Script to check the "random" module's item table shuffling function.
+// This version is for a two-dimensional item table (used for between-groups designs
+
+import defs;
+import std_defs;
+
+import test::stimuli;
+import test::shuffle;
+
+enum ButtonOption {
+    LEFT_BUTTON,
+    MIDDLE_BUTTON,
+    RIGHT_BUTTON
+}
+
+start()
+{
+	if(test::load_stimuli() == ERROR)
+	{
+		println("Failed to load files, terminating.");
+		terminate;
+	}
+
+	test::shuffle_test_items();
+	dump_test_items();
+
+	terminate;
+}
+
+// Prints test_items table contents in terminal window.
+void dump_test_items()
+{
+	test::TestItem[] reference_test_items = test::test_items;
+    	int nitems =  reference_test_items.size;
+
+	int n;
+
+	println(
+	    "n" + "\t" +
+	    "id" + "\t" +
+	    "sentence" + "\t" +
+	    "figure" + "\t" +
+	    "structure" + "\t" +
+        "condition" + "\t" +
+	    "subject" + "\t" +
+	    "type"
+	    );
+
+	while (n < nitems)
+	{
+		println(
+		string(n) + "\t" +
+		string(reference_test_items[n].identification) + "\t" +
+		substring(reference_test_items[n].sentence, 0, 8) + "..." + "\t" +
+		string(reference_test_items[n].figure_file_name) + "\t" +
+		substring(string(reference_test_items[n].structure), 0, 5) + "..\t\t" +
+        substring(string(reference_test_items[n].condition), 0, 5) + "..\t\t" +
+        substring(string(reference_test_items[n].subject), 0, 5) + "..\t" +
+		string(reference_test_items[n].type) + "\t"
+		);
+		n++;
+    	}
+}
