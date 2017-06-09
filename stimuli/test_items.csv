@@ -1,6 +1,5 @@
-identification;sentence;figure_file_name;type;condition;structure;subject;expected_answer
-1;The girl/may/buy/a pear/or/a potato.;1.png;target;tcontrol;may or;the girl;TRUE
-2;The boy/must/buy/a pear/or/a potato.;2.png;target;fcontrol;must or;the boy;FALSE
-3;some/fruits/cost/2 euros.;1.png;filler;tcontrol;some;fruits;TRUE
-4;the boy/and/the girl/both/are offered with/a kind of/fruits.;2.png;filler;fcontrol;both and;the boy and the girl;FALSE
-5;the lady/is offered with/a pear.;1.png;filler;tcontrol;none;the lady;TRUE
+identification;context_sentence;sentence;type;figure1_file_name;figure2_file_name
+1;Octocat really/loves/that/he/or she/is of use.;Octocat is/looking/like/a pirate.;target;codercat.png;femalecodercat.png
+2;Octocat really/loves/that/he/or she/is of use.;Octocat is/looking/like/a pirate.;control;codercat.png;femalecodercat.png
+3;Octocat really/loves/that/he/or she/is of use.;Octocat is/looking/like/a pirate.;control;codercat.png;femalecodercat.png
+4;Octocat really/loves/that/he/or she/is of use.;Octocat is/looking/like/a pirate.;target;codercat.png;femalecodercat.png

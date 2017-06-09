@@ -4,15 +4,13 @@
 record TestItem
 {
     int         identification;
+
+    string      context_sentence;
     string      sentence;
-    string      figure_file_name;
-
     string      type;
-    string      condition;
-    string      structure;
-    string      subject;
 
-    bool        expected_answer;
+    string      figure1_file_name;
+    string      figure2_file_name;
 }
 
 

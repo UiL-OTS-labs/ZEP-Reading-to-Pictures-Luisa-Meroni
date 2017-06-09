@@ -4,18 +4,17 @@ record TestOutput
 {
     int         trial;
     int         identification;
+
+    string      context_sentence;
     string      sentence;
-    string      figure_file_name;
-
     string      type;
-    string      condition;
-    string      structure;
-    string      subject;
 
-    bool        expected_answer;
-    int         observation_time;
+    string      figure1_file_name;
+    string      figure2_file_name;
+
+    int         reading_time_sentence;
     int         reaction_time;
-    bool        answer;
+    string      figure_choice;
 }
 
 

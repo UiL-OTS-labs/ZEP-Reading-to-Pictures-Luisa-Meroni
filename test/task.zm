@@ -5,7 +5,7 @@ import stimuli;
 import shuffle;
 import output;
 import test_page;
-
+import picture_page;
 
 Block task
 {
@@ -41,14 +41,13 @@ Block task
     Block practice
     {
         TestItem        item;   // current item
-        int correct_counter;
 
         on_event:entry()
         {
-            correct_counter = 0;
             num_cycles = prac_items.size;
 
             // Prepare test page: progress bar and prompt enabled.
+            test_page.setup(num_cycles, true);
             test_page.setup(num_cycles, true);
         }
 
@@ -56,11 +55,6 @@ Block task
         on_event:exit()
         {
             test_page.cleanup();
-            if(correct_counter < MINIMAL_CORRECT_PRACTICE)
-            {
-                println("Have not achieved the minimal correct in practice! (" + string(MINIMAL_CORRECT_PRACTICE) + ")");
-                control.stop_experiment();
-            }
         }
 
 
@@ -72,20 +66,13 @@ Block task
 
                 test_page.action(this, item, reference_time, practice.cycle);
             }
+        }
 
-            on_event:exit()
+        Trial picture
+        {
+            on_event:entry()
             {
-                if(test_page.response.choice == item.expected_answer)
-                {
-                    correct_counter = correct_counter + 1;
-                    print("  Correct Answer");
-                }
-                else
-                {
-                    print("Incorrect Answer");
-                }
-
-                println(" (" + string(correct_counter) + "/" + string(MINIMAL_CORRECT_PRACTICE) + ")" );
+                picture_page.action(this, item, reference_time, practice.cycle);
             }
         }
     }
@@ -116,14 +103,13 @@ Block task
     {
         TestItem        item;   // current item
 
-
-
         on_event:entry()
         {
             num_cycles = test_items.size;
 
             // Prepare test page: progress bar enabled, prompt disabled.
             test_page.setup(num_cycles, false);
+            picture_page.setup(num_cycles, false);
         }
 
 
@@ -147,21 +133,19 @@ Block task
             {
                 TestOutput output;
 
-                output.trial             = test.cycle;
-                output.identification    = item.identification;
-                output.sentence          = item.sentence;
-                output.figure_file_name  = item.figure_file_name;
+                output.trial                 = test.cycle;
+                output.identification        = item.identification;
+                output.context_sentence      = item.context_sentence;
+                output.sentence              = item.sentence;
 
-                output.type              = item.type;
-                output.condition         = item.condition;
-                output.structure         = item.structure;
-                output.subject           = item.subject;
+                output.type                  = item.type;
 
+                output.figure1_file_name     = item.figure1_file_name;
+                output.figure2_file_name     = item.figure2_file_name;
 
-                output.expected_answer   = item.expected_answer;
-                output.observation_time  = test_page.segment_selection.observation_time;
-                output.reaction_time     = test_page.response.rt;
-                output.answer            = test_page.response.choice;
+                output.reading_time_sentence = test_page.segment_selection.reading_time;
+                output.reaction_time         = picture_page.response.rt;
+                output.figure_choice         = picture_page.response.choice;
 
                 // Add new row to test output table.
                 test_output_append(output);
@@ -173,6 +157,14 @@ Block task
                 on_event:entry()
                 {
                     test_page.action(this, item, reference_time, test.cycle);
+                }
+            }
+
+            SubTrial picture
+            {
+                on_event:entry()
+                {
+                    picture_page.action(this, item, reference_time, test.cycle);
                 }
             }
 

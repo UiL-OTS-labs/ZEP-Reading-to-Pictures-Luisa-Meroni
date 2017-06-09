@@ -1,3 +1,10 @@
+enum Direction
+{
+    LEFT,
+    RIGHT,
+    BOTTOM,
+}
+
 Page test_page
 {
     TestItem    item;           // trial control parameters
@@ -7,20 +14,9 @@ Page test_page
         fill_pattern_color = TEST_PAGE_COLOR;
     }
 
-
     on_event:key_press()
     {
-        if (input_key == KEY_Shift_L)
-        {
-            response.process_hit(LEFT_BUTTON, event_time);
-        }
-
-        else if(input_key == KEY_Shift_R)
-        {
-            response.process_hit(RIGHT_BUTTON, event_time);
-        }
-
-       else if(input_key == ' ')
+        if(input_key == ' ')
        {
             segment_selection.process_hit(event_time);
        }
@@ -30,15 +26,11 @@ Page test_page
             handle_special_key(this, input_key, input_modifiers);
     }
 
-
     on_event:message()
     {
-        if(message_arg == LEFT_BUTTON|| message_arg == RIGHT_BUTTON)
-            response.process_hit(message_arg, event_time);
-        else if(message_arg == MIDDLE_BUTTON)
+        if(message_arg == BOTTOM)
             segment_selection.process_hit(event_time);
     }
-
 
     VerticalLayout layout
     {
@@ -46,50 +38,6 @@ Page test_page
         {
             spacing = 30;
             height = 0;     // 0 means as large as possible
-        }
-
-        CanvasGadget image_canvas
-        {
-            string image_full_path;
-
-            on_event:resize()
-            {
-                image_shape.setup();
-                this.reload();
-            }
-
-            void reload()
-            {
-                if(!test_page.window.is_shown)
-                {
-                    println("Calling reload before window is shown!");
-                    return;
-                }
-                width    = int(image_shape.actual_width);
-                height   = int(image_shape.actual_height);
-                offset_x = floor(width/2);
-                offset_y = floor(height/2);
-            }
-
-            ImageShape image_shape
-            {
-
-                void setup()
-                {
-                    // Set image so we can query width
-                    image = image_canvas.image_full_path;
-
-                    int width_pix = int(test_page.window.width*STIMULUS_PICTURE_FACTOR);
-                    int height_pix = int(( width_pix / this.image_width ) * this.image_height);
-
-                    width  = width_pix;
-                    height = height_pix;
-                    x      = -floor(width / 2.0);
-                    y      = -floor(height / 2.0);
-
-                    image_canvas.reload();
-                }
-            }
         }
 
         LabelGadget sentence_gadget
@@ -130,6 +78,7 @@ Page test_page
 
                 void setup_segments(string sentence)
                 {
+                    segments.size = 0;
                     current_segment_index = 0;
                     string delim = "/";
                     string pointer = "+";
@@ -171,93 +120,10 @@ Page test_page
                     start(t+50ms); // this is to ensure that the reaction time measurement is synced with refresh update of screen.
                     return this.expected_start_time; //this is synced to the next update.
                 }
-
             }
-            HorizontalLayout button_press_feedback
-            {
-
-                init()
-                {
-                    width = MIDDLE_GUI_COLUMN_WIDTH;     // 0 means as large as possible
-                    spacing = 250;
-                }
-
-                LabelGadget left_button_feedback
-                {
-                    init()
-                    {
-                        font_family = INFO_PAGE_MESSAGE_FONT_FAMILY;
-                        font_size = INFO_PAGE_MESSAGE_FONT_SIZE*2;
-                        fill_pattern_color = color:gray;
-                        text_color = color:white;
-                        hor_alignment = ALIGN_CENTER;
-                        ver_alignment = ALIGN_BEGIN;
-                        size = 250, -1;
-                        margin = 10;
-                        is_visible = true;
-                    }
-
-                    void setup()
-                    {
-                        if (experiment.LEFT_BUTTON_VALUE)
-                            text = TRUE_BUTTON_TEXT;
-                        else
-                            text = FALSE_BUTTON_TEXT;
-                    }
-
-                    void reset()
-                    {
-                        fill_pattern_color = color:gray;
-                    }
-                }
-
-                LabelGadget right_button_feedback
-                {
-                    init()
-                    {
-                        font_family = INFO_PAGE_MESSAGE_FONT_FAMILY;
-                        font_size = INFO_PAGE_MESSAGE_FONT_SIZE*2;
-                        fill_pattern_color = color:gray;
-                        text_color = color:white;
-                        hor_alignment = ALIGN_CENTER;
-                        ver_alignment = ALIGN_BEGIN;
-                        size = 250, -1;
-                        margin = 10;
-                        is_visible = true;
-                    }
-
-                    void setup()
-                    {
-                        if (experiment.RIGHT_BUTTON_VALUE)
-                            text = TRUE_BUTTON_TEXT;
-                        else
-                            text = FALSE_BUTTON_TEXT;
-                    }
-
-                    void reset()
-                    {
-                        fill_pattern_color = color:gray;
-                    }
-                }
-            }
-
-        void feedback_button(int choice)
-        {
-            if(choice == LEFT_BUTTON)
-                button_press_feedback.left_button_feedback.fill_pattern_color = color:dimgray;
-            else
-                button_press_feedback.right_button_feedback.fill_pattern_color = color:dimgray;
-        }
 
         time start_stimulus(time t)
         {
-
-            image_canvas.image_full_path = stimuli_dir() + "/images/" + item.figure_file_name;
-
-            // Start stimulus.
-            image_canvas.image_shape.setup();
-            image_canvas.image_shape.start(t);
-
             sentence_gadget.setup();
             sentence_gadget.start(t+DELAY_SENTENCE_DURATION);
 
@@ -270,10 +136,6 @@ Page test_page
         {
             full_abort();
 
-            button_press_feedback.left_button_feedback.reset();
-            button_press_feedback.right_button_feedback.reset();
-
-            image_canvas.image_shape.is_visible = false;
             sentence_gadget.is_visible = false;
             sentence_gadget.text = " ";
         }
@@ -281,12 +143,15 @@ Page test_page
 
     Response segment_selection
     {
-        int observation_time;
+        bool context_sentence;
+
+        int reading_time;
 
         void clear()
         {
-            observation_time = -9999;
+            reading_time = -9999;
         }
+
         void process_hit(time t)
         {
              HitType validity = hit(t);
@@ -306,73 +171,32 @@ Page test_page
 
         void process_valid_response(time t)
         {
-            if(layout.sentence_gadget.is_first_segment()) {
-                observation_time = int(t-layout.image_canvas.image_shape.start_time);
-            }
+            if(layout.sentence_gadget.is_first_segment())
+                this.reference_time = t;
 
-            layout.sentence_gadget.next_segment();
-
-            time next_segment_onset = layout.sentence_gadget.delay_until_next_frame(t);
+            segment_selection.reading_time = int(reaction_time(num_valid_hits-1));
 
             if(layout.sentence_gadget.last_segment_displayed())
             {
-                response.start(next_segment_onset);
-                segment_selection.ignore_remaining_hits();
-                segment_selection.stop();
+                if(context_sentence)
+                {
+                    this.context_sentence = false;
+                    layout.sentence_gadget.setup_segments(item.sentence);
+                }
+                else
+                {
+                    segment_selection.ignore_remaining_hits();
+                    segment_selection.stop();
+                    done(CONTINUE);
+                }
+            }
+            else
+            {
+                layout.sentence_gadget.next_segment();
+                layout.sentence_gadget.delay_until_next_frame(t);
             }
         }
     }
-
-    Response response
-    {
-
-        // Response data.
-        int rt;             // response times [ms]
-        bool choice;
-
-        void clear()
-        {
-            rt = -9999;
-            choice = false;
-        }
-
-        void process_hit(int button_choice, time t)
-        {
-            HitType validity = hit(t);
-
-            // Accept the first hit in the response interval, end the
-            // response interval and start next stimulus/response interval.
-            if (validity == HIT_VALID)
-            {
-               this.process_valid_response(button_choice, t);
-            }
-            else if (validity == HIT_TOO_EARLY || validity == HIT_TOO_LATE)
-            {
-                // False alarm. Deal with this if desired.
-                println("False alarm: pressed a response button outside time window for response.");
-            }
-        }
-
-        void process_valid_response(int button_choice, time t)
-        {
-            layout.feedback_button(button_choice);
-
-            //item.correct_choice == button_choice
-            rt = int(reaction_time(0));
-            if( button_choice==LEFT_BUTTON )
-                choice = experiment.LEFT_BUTTON_VALUE;
-            if ( button_choice==RIGHT_BUTTON )
-                choice = experiment.RIGHT_BUTTON_VALUE;
-            ignore_remaining_hits();
-            stop(t + DURATION_FEEDBACK_BUTTON);
-        }
-
-        on_event:finish()
-        {
-            done(CONTINUE);
-        }
-    }
-
 
     // Aborts any ongoing activity on this page and signals the initiator
     // of the trial that we're done.
@@ -415,10 +239,6 @@ Page test_page
         control.target = this;
         control.button_box.disable_buttons();
         control.button_box.enable_all_buttons(CONTINUE);
-
-        //  set the button labels
-        layout.button_press_feedback.left_button_feedback.setup();
-        layout.button_press_feedback.right_button_feedback.setup();
     }
 
     // Performs cleaning up if necessary.
@@ -438,17 +258,18 @@ Page test_page
         item = it;
 
         // parse string
-        layout.sentence_gadget.setup_segments(item.sentence);
+        segment_selection.context_sentence = true;
+        layout.sentence_gadget.setup_segments(item.context_sentence);
 
         // Show this page (if not yet done) and make tref the trial start time.
         tref = test_window1.show_test_page(this, tref + INTERTRIAL_INTERVAL);
 
         // setup control box
+        setup_button_box();
+
         // Reset response data.
-        response.clear();
         segment_selection.clear();
 
-        setup_button_box();
 
         // First 'stimulus' is a fixation symbol. Once that is displayed
         // participant can produce the segments by hitting the response
@@ -475,8 +296,8 @@ Page test_page
         //assumes that it is open.
         control.target = this;
         control.button_box.disable_buttons();
-        control.button_box.enable_button(0, LEFT_BUTTON);
-        control.button_box.enable_button(1, MIDDLE_BUTTON);
-        control.button_box.enable_button(2, RIGHT_BUTTON);
+        control.button_box.enable_button(0, LEFT);
+        control.button_box.enable_button(1, RIGHT);
+        control.button_box.enable_button(2, BOTTOM);
     }
 }

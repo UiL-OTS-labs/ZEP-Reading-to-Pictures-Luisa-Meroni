@@ -1,0 +1,236 @@
+Page picture_page
+{
+    TestItem    item;           // trial control parameters
+
+    init()
+    {
+        fill_pattern_color = TEST_PAGE_COLOR;
+    }
+
+    on_event:key_press()
+    {
+        // Handle left-shift (same) and right-shift (diff).
+       if (input_key == KEY_Shift_L)
+           response.process_hit(LEFT, event_time);
+       else if (input_key == KEY_Shift_R)
+           response.process_hit(RIGHT, event_time);
+        else if(input_key == KEY_Escape)
+            done(CONTINUE);
+        else
+            handle_special_key(this, input_key, input_modifiers);
+    }
+
+
+    on_event:message()
+    {
+        if(message_arg == LEFT || message_arg == RIGHT )
+            response.process_hit(message_arg,event_time);
+    }
+
+
+    VerticalLayout layout
+    {
+        init()
+        {
+            spacing = 30;
+            height = 0;     // 0 means as large as possible
+        }
+
+        CanvasGadget canvas
+        {
+            init()
+            {
+                is_visible = false;
+                size = display_device.head_width(test_window1.head), display_device.head_height(test_window1.head);
+                offset_x = floor(width / 2);
+                offset_y = floor(height / 2);
+            }
+
+            ImageShape left_image
+            {
+                void load(string filepath)
+                {
+                    image = filepath;
+                    is_visible = true;
+                    width = floor(IMAGE_SIZE_PX);
+                    height = floor(IMAGE_SIZE_PX);
+                    offset_x = -width/2;
+                    offset_y = -height/2;
+                    x = - ( DISTANCE_IMAGES_PX + ( width/2 ));
+                    y = 0; // Important to reset feedback
+                }
+            }
+
+            ImageShape right_image
+            {
+                void load(string filepath)
+                {
+                    image = filepath;
+                    is_visible = true;
+                    width = floor(IMAGE_SIZE_PX);
+                    height = floor(IMAGE_SIZE_PX);
+                    offset_x = -width/2;
+                    offset_y = -height/2;
+                    x = DISTANCE_IMAGES_PX + ( width/2 );
+                    y = 0; // Important to reset feedback
+                }
+            }
+
+            void setup()
+            {
+                left_image.load(stimuli_dir() + "/images/" + item.figure1_file_name);
+                right_image.load(stimuli_dir() + "/images/" + item.figure2_file_name);
+            }
+        }
+
+        time start_stimulus(time t)
+        {
+            canvas.setup();
+            canvas.start(t);
+            return canvas.expected_start_time;
+        }
+
+
+        void reset()
+        {
+            full_abort();
+        }
+    }
+
+    Response response
+   {
+       // Response data.
+       string choice;        // response value
+       int  rt;             // response time [ms]
+
+
+       void clear()
+       {
+           rt = -9999;
+           choice = "placeholder";
+       }
+
+
+       void process_hit(int val, time t)
+       {
+           HitType validity = hit(t);
+
+           // Accept the first hit in the response interval and end the
+           // response interval.
+           if (validity == HIT_VALID)
+           {
+               rt = int(reaction_time(0));
+
+               if(val == LEFT)
+               {
+                   choice =  layout.canvas.left_image.image;
+                   layout.canvas.left_image.y = -FEEDBACK_JUMP;
+               }
+               else
+               {
+                   choice =  layout.canvas.right_image.image;
+                    layout.canvas.right_image.y = -FEEDBACK_JUMP;
+               }
+
+               ignore_remaining_hits();
+
+               stop(t+FEEDBACK_DURATION);
+           }
+           else if (validity == HIT_TOO_EARLY || validity == HIT_TOO_LATE)
+           {
+               // False alarm. Deal with this if desired.
+           }
+       }
+
+       on_event:finish()
+       {
+           done(CONTINUE);
+       }
+   }
+
+    // Aborts any ongoing activity on this page and signals the initiator
+    // of the trial that we're done.
+    void done(int msgid)
+    {
+        // Just in case; abort presentation if still active.
+        layout.reset();
+
+        signal_target(msgid);   // tell caller we're done
+        target = null;
+
+        control.clear_status();
+
+        // Enable button-box buttons.
+        if(control.target == this)
+        {
+            control.target = null;
+            control.button_box.disable_buttons();
+            control.button_box.enable_all_buttons(CONTINUE);
+        }
+    }
+
+
+    //==========================================================================
+
+
+    // Performs preparatory work required before using this page.
+    void setup(int ntrials=-1, bool pr=false)
+    {
+        test_page_overlay.setup(this);
+
+        // Enable or disable the progress bar.
+        test_page_overlay.show_progress_bar(ntrials);   // disabled if < 0
+
+        // Enable button-box buttons.
+        control.target = this;
+        control.button_box.disable_buttons();
+        control.button_box.enable_all_buttons(CONTINUE);
+    }
+
+    // Performs cleaning up if necessary.
+    void cleanup()
+    {
+        test_page_overlay.cleanup();
+
+        control.button_box.disable_buttons();
+        control.target = null;
+    }
+
+
+    // Starts a trial.
+    void action(Object caller, TestItem it, time tref, int count=-1)
+    {
+        // Save the passed trial control parameters.
+        item = it;
+
+        // Show this page (if not yet done) and make tref the trial start time.
+        tref = test_window1.show_test_page(this, tref + INTERTRIAL_INTERVAL);
+
+        tref = layout.start_stimulus(tref);
+        response.start(tref);
+
+        // setup control box
+        setup_button_box();
+
+        // Update progress counter (if enabled).
+        test_page_overlay.update_progress_bar(count);
+
+        // Update status line on control window. Cleared in done() above.
+        control.set_status(
+            string(item.identification) + "  " +
+            string(item.type));
+
+        // Remember who to signal when the trial is over.
+        target = caller;
+    }
+
+    void setup_button_box()
+    {
+        //assumes that it is open.
+        control.target = this;
+        control.button_box.disable_buttons();
+        control.button_box.enable_button(0, LEFT);
+        control.button_box.enable_button(1, RIGHT);
+        control.button_box.enable_button(2, BOTTOM);
+    }
+}

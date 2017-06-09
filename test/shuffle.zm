@@ -53,27 +53,5 @@ bool is_allowed_item_sequence(TestItem[] items, int index)
         items[index].type == items[index-2].type
     ) return false;
 
-    if (index >= 1 &&
-    	items[index].structure == items[index-1].structure
-    ) return false;
-
-    int window_size = 3;
-    int window_shift = -1;
-    if (index >= window_size-1)
-    {
-        int subject_counter = 1;
-        string current_subject = items[index].subject;
-
-        while (window_shift > -window_size)
-        {
-            if(items[index+window_shift].subject == current_subject)
-                subject_counter = subject_counter+1;
-            if(subject_counter > 1)
-                return false;
-            window_shift = window_shift - 1;
-
-        }
-    }
-
     return true;
 }

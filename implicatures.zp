@@ -16,42 +16,18 @@ import output;
 
 import test::task;
 
-enum ButtonOption {
-    LEFT_BUTTON,
-    MIDDLE_BUTTON,
-    RIGHT_BUTTON,
-    ERROR_CHOICE,
-}
-
 Experiment experiment
 {
-    bool LEFT_BUTTON_VALUE = true;
-    bool RIGHT_BUTTON_VALUE = false;
 
     on_event:entry()
     {
         if(check_participant_fields() != OK)
             terminate;
-        setup_button_values();
 
         control.button_box.open();
         show_test_windows();
-
     }
 
-    void setup_button_values()
-    {
-        if(expdb.participant.get_enum_field("left_button") == "true")
-        {
-            LEFT_BUTTON_VALUE = true;
-            RIGHT_BUTTON_VALUE = !LEFT_BUTTON_VALUE;
-        }
-        else
-        {
-            LEFT_BUTTON_VALUE = false;
-            RIGHT_BUTTON_VALUE = !LEFT_BUTTON_VALUE;
-        }
-    }
 
     on_event:message()
     {
