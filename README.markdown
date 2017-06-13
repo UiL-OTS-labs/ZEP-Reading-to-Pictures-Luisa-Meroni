@@ -52,7 +52,10 @@ Will split into:
 * or she
 * is being used like this.
 
-## Image Width and other settings
+## Custom Instruction Text
+Edit the variables found in `modules/instructions_texts_nl` to change the instructions shown to the participant.
+
+## Image Width and Misc settings
 See `test/defs.zm` for settings.
 
 The width of images can be globally set by changing the value of `IMAGE_WIDTH_PX` to some pixel value.
