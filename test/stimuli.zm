@@ -6,7 +6,7 @@ record TestItem
     int         identification;
 
     string      context_sentence;
-    string      sentence;
+    string      target_sentence;
     string      type;
 
     string      figure1_file_name;

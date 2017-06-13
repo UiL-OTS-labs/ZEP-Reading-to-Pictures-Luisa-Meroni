@@ -136,7 +136,7 @@ Block task
                 output.trial                 = test.cycle;
                 output.identification        = item.identification;
                 output.context_sentence      = item.context_sentence;
-                output.sentence              = item.sentence;
+                output.target_sentence       = item.target_sentence;
 
                 output.type                  = item.type;
 

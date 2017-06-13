@@ -1,4 +1,4 @@
-identification;context_sentence;sentence;type;figure1_file_name;figure2_file_name
+identification;context_sentence;target_sentence;type;figure1_file_name;figure2_file_name
 1;Octocat really/loves/that/he/or she/is of use.;Octocat is/looking/like/a pirate.;target;codercat.png;femalecodercat.png
 2;Octocat really/loves/that/he/or she/is of use.;Octocat is/looking/like/a pirate.;control;codercat.png;femalecodercat.png
 3;Octocat really/loves/that/he/or she/is of use.;Octocat is/looking/like/a pirate.;control;codercat.png;femalecodercat.png

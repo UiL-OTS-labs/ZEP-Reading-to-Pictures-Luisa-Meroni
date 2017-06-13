@@ -181,7 +181,7 @@ Page test_page
                 if(context_sentence)
                 {
                     this.context_sentence = false;
-                    layout.sentence_gadget.setup_segments(item.sentence);
+                    layout.sentence_gadget.setup_segments(item.target_sentence);
                 }
                 else
                 {
