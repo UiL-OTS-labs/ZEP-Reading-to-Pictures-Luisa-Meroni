@@ -9,12 +9,6 @@ import std_defs;
 import test::stimuli;
 import test::shuffle;
 
-enum ButtonOption {
-    LEFT_BUTTON,
-    MIDDLE_BUTTON,
-    RIGHT_BUTTON
-}
-
 start()
 {
 	if(test::load_stimuli() == ERROR)
@@ -40,26 +34,24 @@ void dump_test_items()
 	println(
 	    "n" + "\t" +
 	    "id" + "\t" +
+        "context_sentence" + "\t\t" +
 	    "sentence" + "\t" +
-	    "figure" + "\t" +
-	    "structure" + "\t" +
-        "condition" + "\t" +
-	    "subject" + "\t" +
-	    "type"
+        "type" + "\t" +
+	    "figure1" + "\t\t" +
+        "figure2" + "\t"
 	    );
 
 	while (n < nitems)
 	{
-		println(
-		string(n) + "\t" +
-		string(reference_test_items[n].identification) + "\t" +
-		substring(reference_test_items[n].sentence, 0, 8) + "..." + "\t" +
-		string(reference_test_items[n].figure_file_name) + "\t" +
-		substring(string(reference_test_items[n].structure), 0, 5) + "..\t\t" +
-        substring(string(reference_test_items[n].condition), 0, 5) + "..\t\t" +
-        substring(string(reference_test_items[n].subject), 0, 5) + "..\t" +
-		string(reference_test_items[n].type) + "\t"
-		);
-		n++;
-    	}
+        println(
+            string(n) + "\t" +
+            string(reference_test_items[n].identification) + "\t" +
+            substring(reference_test_items[n].context_sentence, 0, 8) + "..." + "\t\t\t" +
+            substring(reference_test_items[n].sentence, 0, 8) + "..." + "\t" +
+            string(reference_test_items[n].type) + "\t" +
+            string(reference_test_items[n].figure1_file_name) + "\t" +
+            string(reference_test_items[n].figure2_file_name)
+            );
+        n++;
+    }
 }
