@@ -55,40 +55,29 @@ Page picture_page
                 }
             }
 
-            ImageShape left_image
-            {
-                void load(string filepath)
-                {
-                    image = filepath;
-                    is_visible = false;
-                    width = floor(IMAGE_SIZE_PX);
-                    height = floor(IMAGE_SIZE_PX);
-                    offset_x = -width/2;
-                    offset_y = -height/2;
-                    x = - ( DISTANCE_IMAGES_PX + ( width/2 ));
-                    y = 0; // Important to reset feedback
-                }
-            }
+            ImageShape left_image {}
 
-            ImageShape right_image
-            {
-                void load(string filepath)
-                {
-                    image = filepath;
-                    is_visible = false;
-                    width = floor(IMAGE_SIZE_PX);
-                    height = floor(IMAGE_SIZE_PX);
-                    offset_x = -width/2;
-                    offset_y = -height/2;
-                    x = DISTANCE_IMAGES_PX + ( width/2 );
-                    y = 0; // Important to reset feedback
-                }
-            }
+            ImageShape right_image {}
 
             void setup()
             {
-                left_image.load(stimuli_dir() + "/images/" + item.figure1_file_name);
-                right_image.load(stimuli_dir() + "/images/" + item.figure2_file_name);
+                setup_image(left_image, stimuli_dir() + "/images/" + item.figure1_file_name, -1);
+                setup_image(right_image, stimuli_dir() + "/images/" + item.figure2_file_name, 1);
+            }
+
+            void setup_image( ImageShape target, string filepath, int side ) // side -1 is left
+            {
+                target.image = filepath;
+                target.is_visible = false;
+
+                target.width = IMAGE_WIDTH_PX;
+                target.height = (target.width/target.image_width) * target.image_height;
+
+                target.offset_x = -target.width/2;
+                target.offset_y = -target.height/2;
+
+                target.y = 0;
+                target.x = side * ( DISTANCE_BETWEEN_IMAGES_PX + ( target.width/2 ) );
             }
         }
 

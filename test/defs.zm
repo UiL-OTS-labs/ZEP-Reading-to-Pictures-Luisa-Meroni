@@ -5,7 +5,7 @@ const dur INTERTRIAL_INTERVAL              = 500ms;
 const real MIDDLE_GUI_COLUMN_WIDTH_FACTOR = 0.8;
 
 // Duration of the fixation cross
-const dur FIXATION_DURATION                = 500s;
+const dur FIXATION_DURATION                = 500ms;
 
 // Duration of the feedback on seleciton
 const dur FEEDBACK_DURATION                = 500ms;
@@ -17,7 +17,7 @@ const int FEEDBACK_JUMP                    = 50;
 const dur DELAY_SENTENCE_DURATION          = 150ms;
 
 // Image width, the height is automatically adjusted to the image original size.
-const int IMAGE_SIZE_PX                    = 400;
+const int IMAGE_WIDTH_PX                    = 400;
 
 // Distance between both images.
-const int DISTANCE_IMAGES_PX               = 100;
+const int DISTANCE_BETWEEN_IMAGES_PX               = 100;
