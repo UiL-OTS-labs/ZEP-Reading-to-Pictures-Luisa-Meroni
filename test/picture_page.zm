@@ -59,10 +59,16 @@ Page picture_page
 
             ImageShape right_image {}
 
-            void setup()
+            void setup_normal()
             {
                 setup_image(left_image, stimuli_dir() + "/images/" + item.figure1_file_name, -1);
                 setup_image(right_image, stimuli_dir() + "/images/" + item.figure2_file_name, 1);
+            }
+
+            void setup_reverse()
+            {
+                setup_image(left_image, stimuli_dir() + "/images/" + item.figure2_file_name, -1);
+                setup_image(right_image, stimuli_dir() + "/images/" + item.figure1_file_name, 1);
             }
 
             void setup_image( ImageShape target, string filepath, int side ) // side -1 is left
@@ -84,7 +90,10 @@ Page picture_page
         time start_stimulus(time tref)
         {
             // Load images etc
-            canvas.setup();
+            if(expdb.participant.get_bool_field("reverse_side"))
+                canvas.setup_reverse();
+            else
+                canvas.setup_normal();
 
             // setup the fixation cross
             canvas.fixation.start(tref, FIXATION_DURATION);

@@ -17,21 +17,21 @@ HISTORY:
 // Creates required participant record fields.
 void create_participant_fields()
 {
-	expdb.participant.add_enum_field("reverse_side", "true|false");
+	expdb.participant.add_bool_field("reverse_side");
 
-    string automatic_selection;
+    bool automatic_selection;
     if( ( expdb.num_participants % 2 ) > 0 )
-        automatic_selection = "true";
+        automatic_selection = true;
     else
-        automatic_selection = "false";
-    expdb.participant.set_enum_field("reverse_side",automatic_selection);
+        automatic_selection = false;
+    expdb.participant.set_bool_field("reverse_side",automatic_selection);
 }
 
 
 // Checks current values of participant record fields.
 int check_participant_fields()
 {
-	if (!expdb.participant.has_enum_field("reverse_side"))
+	if (!expdb.participant.has_bool_field("reverse_side"))
 	{
 		print_error("Participant field 'reverse_side' was not set to either 'true' or 'false'!\n");
         return ERROR;
