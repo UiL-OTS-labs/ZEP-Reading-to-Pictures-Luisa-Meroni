@@ -130,14 +130,17 @@ Page picture_page
 
                if(val == LEFT)
                {
-                   choice =  layout.canvas.left_image.image;
-                   layout.canvas.left_image.y = -FEEDBACK_JUMP;
+                    choice =  layout.canvas.left_image.image;
+                    layout.canvas.left_image.y = -FEEDBACK_JUMP;
                }
                else
                {
-                   choice =  layout.canvas.right_image.image;
+                    choice =  layout.canvas.right_image.image;
                     layout.canvas.right_image.y = -FEEDBACK_JUMP;
                }
+
+               // Clean up choice
+               choice = token(choice, "/", count_keys(choice, "/"));
 
                ignore_remaining_hits();
 
