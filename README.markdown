@@ -1,29 +1,43 @@
-# Implicatures Experiment
-Self-Paced Reading with Cumulative Window with picture for implicatures.
+# Reading Experiment
+## Overview
+Self-Paced Reading (SPR) with Cumulative Window followed by a two pictures choice task.
 
-Participant's task is to read sentences that are shown beneath a picture. The sentences are presented in a segment-by-segment fashion. Participant reveals next segment by hitting a button. At the final word the participant is to make an additional choice about the sentence and picture.
+Participant's task is to read sentences. The sentences present in a segment-by-segment fashion.
+Participant reveals next segment by hitting a button.
+After reading the fist sentence (context) the second sentence (i.e. target sentence) shows.
+After the second sentence the participant sees two pictures.
 
-This particular SPR implementation uses a cumulative window: On each response the segment window grows by one segment, thus revealing a larger part of the sentence.
+This particular SPR implementation uses a cumulative window:
+On each response the segment window grows by one segment, thus revealing a larger part of the sentence.
 
-Current button setup is SPACE_BAR to show next segement and LEFT and RIGHT SHIFT for the additional choice. Alternative one can use an attached [BeexyBox](http://www.beexy.org/responseboxes/).
+Current button setup is SPACE_BAR to show next segment and LEFT and RIGHT SHIFT for the choice.
 
-The value of the left and right button (i.e. 'true' or 'false') is swapped for every other participant. Note that you can
-still change this by updating the participant record `left_button`.
+Alternative one can use an attached [BeexyBox](http://www.beexy.org/responseboxes/) which will result in more accurate reaction time measurements.
+
+The participant field reverse_side needs to set to either true or false. If _true_, the location of the two pictures reverse.
+
+## Instructions on how to Zep
+* [Installing an Experiment](https://www.beexy.nl/zep/wiki/doku.php?id=experiment:installing)
+* [Running an Experiment](https://www.beexy.nl/zep/wiki/doku.php?id=experiment:running)
+* [Extracting Experiment Results](https://www.beexy.nl/zep/wiki/doku.php?id=experiment:results)
+
 ## Output
-RT between onset exposure of last word and the following button choice.
+* Participant' reading time of the target sentence.
+* Participant' reaction time (onset of picture to button press).
+* Participant' figure choice.
 
 ## Pseudorandomisation
 * No more than three of the same type in following properties in sequence (filler/target)
-* No same structures may follow each other.
-* In a 3-sized window each subject may only occur once.
 
 You can test the pseudoranomisation by running
- zep test_pseudorandomisation.zp
+ `zep test_pseudorandomisation.zp`
 
 ## Targeted Language
 Dutch
 
-## Stimuli format
+## Adding Stimuli
+See `stimuli/prac_items.csv` and `stimuli/test_items.csv` for how stimuli are read.
+
 If you want to split a sentence at specific places you can add a "/". The script automatically removes leading and trailing whitespaces of thus created segment and adds a single whitespace at the end.
 
 For instance:
@@ -36,14 +50,16 @@ Will split into:
 * or she
 * is being used like this.
 
+## Image Width and other settings
+See `test/defs.zm` for settings.
+
+The width of images can be globally set by changing the value of `IMAGE_WIDTH_PX` to some pixel value.
+
 ## DISCLAIMER
 This experiment script is released under the terms of the GNU General Public License (see http://www.gnu.org/licenses/gpl-2.0.html). It is distributed in the hope that it will be useful, but with absolutely no warranty. It is your responsibility to carefully study and test the script before using it with real participants.
 
 ## Request details
-### Author
+### Script Author
 [C. van Run](http://www.uu.nl/staff/CPAvanRun)
 ### Client
-Ying Liu
-### Supervisors
-* [Rick Nouwen](http://www.uu.nl/medewerkers/RWFNouwen)
-* [Yaron McNabb](http://www.uu.nl/medewerkers/YMcNabb)
+[dr. L. Meroni](https://www.uu.nl/staff/LMeroni/0)
