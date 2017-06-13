@@ -195,8 +195,6 @@ Page picture_page
     // Performs preparatory work required before using this page.
     void setup(int ntrials=-1, bool pr=false)
     {
-        this.hide_cursor();
-
         test_page_overlay.setup(this);
 
         // Enable or disable the progress bar.
