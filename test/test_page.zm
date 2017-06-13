@@ -270,7 +270,6 @@ Page test_page
         // Reset response data.
         segment_selection.clear();
 
-
         // First 'stimulus' is a fixation symbol. Once that is displayed
         // participant can produce the segments by hitting the response
         // button repeatedly.

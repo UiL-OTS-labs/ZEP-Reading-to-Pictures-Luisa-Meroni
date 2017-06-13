@@ -195,10 +195,16 @@ Page picture_page
     // Performs preparatory work required before using this page.
     void setup(int ntrials=-1, bool pr=false)
     {
+        this.hide_cursor();
+
         test_page_overlay.setup(this);
 
         // Enable or disable the progress bar.
         test_page_overlay.show_progress_bar(ntrials);   // disabled if < 0
+
+        // Show or hide prompt.
+        test_page_overlay.show_prompt(pr ?
+            PRACTICE_TEXT_OVERLAY : "");
 
         // Enable button-box buttons.
         control.target = this;

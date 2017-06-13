@@ -45,10 +45,6 @@ Block task
         on_event:entry()
         {
             num_cycles = prac_items.size;
-
-            // Prepare test page: progress bar and prompt enabled.
-            test_page.setup(num_cycles, true);
-            test_page.setup(num_cycles, true);
         }
 
 
@@ -64,6 +60,8 @@ Block task
             {
                 item = prac_items[practice.cycle];
 
+                // Prepare test page: progress bar and prompt enabled.
+                test_page.setup(practice.num_cycles, true);
                 test_page.action(this, item, reference_time, practice.cycle);
             }
         }
@@ -72,6 +70,7 @@ Block task
         {
             on_event:entry()
             {
+                picture_page.setup(practice.num_cycles, true);
                 picture_page.action(this, item, reference_time, practice.cycle);
             }
         }
@@ -92,7 +91,6 @@ Block task
         on_event:entry()
         {
             pause_page.set_text(AFTER_PRACTICE_TEXT, true);
-
             pause_page.action(this);
             control.button_box.enable_all_buttons(CONTINUE);
         }
@@ -106,10 +104,6 @@ Block task
         on_event:entry()
         {
             num_cycles = test_items.size;
-
-            // Prepare test page: progress bar enabled, prompt disabled.
-            test_page.setup(num_cycles, false);
-            picture_page.setup(num_cycles, false);
         }
 
 
@@ -156,6 +150,8 @@ Block task
             {
                 on_event:entry()
                 {
+                    // Prepare test page: progress bar enabled, prompt disabled.
+                    test_page.setup(test.num_cycles, false);
                     test_page.action(this, item, reference_time, test.cycle);
                 }
             }
@@ -164,6 +160,7 @@ Block task
             {
                 on_event:entry()
                 {
+                    picture_page.setup(test.num_cycles, false);
                     picture_page.action(this, item, reference_time, test.cycle);
                 }
             }
