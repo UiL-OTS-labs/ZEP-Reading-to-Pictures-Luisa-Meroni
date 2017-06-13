@@ -1,13 +1,23 @@
 // Duration of the interval between two trials.
-const dur INTERTRIAL_INTERVAL              = 1000ms;
+const dur INTERTRIAL_INTERVAL              = 500ms;
 
-const real 	MIDDLE_GUI_COLUMN_WIDTH_FACTOR = 0.8;
+// Sets the width of the middle GUI items
+const real MIDDLE_GUI_COLUMN_WIDTH_FACTOR = 0.8;
 
+// Duration of the fixation cross
+const dur FIXATION_DURATION                = 500s;
+
+// Duration of the feedback on seleciton
 const dur FEEDBACK_DURATION                = 500ms;
-const int FEEDBACK_JUMP                     = 50;
 
-const dur DELAY_SENTENCE_DURATION        = 500ms;
+// Pictures jump slightly up when selected. This value determines HOW high.
+const int FEEDBACK_JUMP                    = 50;
 
+// A slight delay before the reading prompt shows
+const dur DELAY_SENTENCE_DURATION          = 150ms;
+
+// Image width, the height is automatically adjusted to the image original size.
 const int IMAGE_SIZE_PX                    = 400;
 
+// Distance between both images.
 const int DISTANCE_IMAGES_PX               = 100;

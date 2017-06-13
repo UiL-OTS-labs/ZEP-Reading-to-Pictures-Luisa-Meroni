@@ -40,10 +40,19 @@ Page picture_page
         {
             init()
             {
-                is_visible = false;
                 size = display_device.head_width(test_window1.head), display_device.head_height(test_window1.head);
                 offset_x = floor(width / 2);
                 offset_y = floor(height / 2);
+            }
+
+            CrossShape fixation
+            {
+                init()
+                {
+                    radius = 15;
+                    line_width = 5;
+                    line_pattern_color = color:crimson;
+                }
             }
 
             ImageShape left_image
@@ -51,7 +60,7 @@ Page picture_page
                 void load(string filepath)
                 {
                     image = filepath;
-                    is_visible = true;
+                    is_visible = false;
                     width = floor(IMAGE_SIZE_PX);
                     height = floor(IMAGE_SIZE_PX);
                     offset_x = -width/2;
@@ -66,7 +75,7 @@ Page picture_page
                 void load(string filepath)
                 {
                     image = filepath;
-                    is_visible = true;
+                    is_visible = false;
                     width = floor(IMAGE_SIZE_PX);
                     height = floor(IMAGE_SIZE_PX);
                     offset_x = -width/2;
@@ -83,11 +92,20 @@ Page picture_page
             }
         }
 
-        time start_stimulus(time t)
+        time start_stimulus(time tref)
         {
+            // Load images etc
             canvas.setup();
-            canvas.start(t);
-            return canvas.expected_start_time;
+
+            // setup the fixation cross
+            canvas.fixation.start(tref, FIXATION_DURATION);
+            time fixoffset = canvas.fixation.expected_finish_time;
+
+            // Start the images on time
+            canvas.left_image.start(fixoffset);
+            canvas.right_image.start(fixoffset);
+
+            return canvas.left_image.expected_start_time;
         }
 
 
@@ -207,6 +225,7 @@ Page picture_page
         tref = test_window1.show_test_page(this, tref + INTERTRIAL_INTERVAL);
 
         tref = layout.start_stimulus(tref);
+
         response.start(tref);
 
         // setup control box
