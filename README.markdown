@@ -36,7 +36,9 @@ You can test the pseudoranomisation by running
 Dutch
 
 ## Adding Stimuli
-See `stimuli/prac_items.csv` and `stimuli/test_items.csv` for how stimuli are read.
+See `stimuli/prac_items.csv` and `stimuli/test_items.csv` for how stimuli should be configured.
+
+Images should go in the `stimuli/images` directory.
 
 If you want to split a sentence at specific places you can add a "/". The script automatically removes leading and trailing whitespaces of thus created segment and adds a single whitespace at the end.
 
