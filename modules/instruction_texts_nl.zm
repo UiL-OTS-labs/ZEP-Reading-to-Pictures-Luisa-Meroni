@@ -1,32 +1,23 @@
 const string    WELCOME_TEXT2 =
 "<b>Bedankt voor je deelname!</b>,\n"
 "\n"
-"In dit experiment krijg je ongeveer 160 afbeeldingen te zien, die gecombineerd zijn met een zin. \n"
-"Je zal gevraagd worden deze afbeelding-zin combinaties te beoordelen door op knoppen te drukken. \n"
-"Het experiment duurt ongeveer 20 minuten. \n\n"
+"Hier volgt wat instructies.\n"
 "<i>Druk een willekeurige knop op de knoppenkast om verder te gaan</i>";
 
 string	INSTRUCTION_TEXT =
-"In dit experiment krijg je steeds een afbeelding en een zin te zien. Het is aan jou om te bepalen of deze zin een natuurlijke beschrijving van de afbeelding is. "
-"Als je vindt dat de zin en de afbeelding goed bij elkaar passen, druk dan op de knop."
-"Op het moment dat je een afbeelding ziet, verschijnt steeds het eerste woord van een zin. Je kan deze zin afmaken door op de <b>middelste</b> knop te drukken. "
-"Iedere keer dat je drukt verschijnt er een nieuw deel van de zin. "
-"De zin zal eindigen met een grote punt. Vanaf dat moment kan je de zin beoordelen. "
-"\n\n"
-"Het is gaat er bij het beoordelen van de zin om of je het een natuurlijke beschrijving van de afbeelding vindt, niet om of je denkt dat het goed zou moeten zijn. "
-"Er zijn geen goede of foute antwoorden. Volg je intuïties!"
+"Hier volgt nog wat meer instructies"
 "\n\n"
 "<i>Druk een willekeurige knop op de knoppenkast om verder te gaan</i>";
 
 const string INSTRUCTION_TEXT2 =
-"Voordat het experiment begint, krijg je vier voorbeelden.\n"
+"Voordat het experiment begint, krijg je enkele voorbeelden te zien om te oefenen\n"
 "\n"
 "Na deze voorbeelden krijg je de mogelijkheid om vragen te stellen.\n"
 "\n"
 "<i>Druk een willekeurige knop op de knoppenkast om verder te gaan</i>";
 
 const string 	PRACTICE_TEXT_OVERLAY =
-"Bestudeer de plaatjes en\nlees de zin deel voor deel";
+"Lees de zinnen deel voor deel en kies een figuur";
 
 const string 	AFTER_PRACTICE_TEXT 	=
 "Einde oefening.\n"
@@ -36,6 +27,6 @@ const string 	AFTER_PRACTICE_TEXT 	=
 "<i>Druk een willekeurige knop op de knoppenkast om verder te gaan</i>";
 
 const string PAUSE_TEXT =
-"Korte pause.\n"
+"Het is tijd voor een korte pause.\n"
 "\n"
 "<i>Druk een willekeurige knop op de knoppenkast om verder te gaan</i>";
