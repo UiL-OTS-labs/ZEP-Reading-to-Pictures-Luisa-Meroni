@@ -140,6 +140,8 @@ Block task
                 output.reading_time_sentence = test_page.segment_selection.reading_time;
                 output.reaction_time         = picture_page.response.rt;
                 output.figure_choice         = picture_page.response.choice;
+                
+                output.correct               = output.figure_choice == item.correct;
 
                 // Add new row to test output table.
                 test_output_append(output);

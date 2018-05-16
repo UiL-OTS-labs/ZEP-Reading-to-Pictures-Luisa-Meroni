@@ -11,6 +11,7 @@ record TestItem
 
     string      figure1_file_name;
     string      figure2_file_name;
+    string      correct;
 }
 
 

@@ -12,6 +12,8 @@ record TestOutput
     string      figure1_file_name;
     string      figure2_file_name;
 
+    int         correct;
+
     int         reading_time_sentence;
     int         reaction_time;
     string      figure_choice;
