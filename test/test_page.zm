@@ -296,7 +296,7 @@ Page test_page
         control.target = this;
         control.button_box.disable_buttons();
         control.button_box.enable_button(0, LEFT);
-        control.button_box.enable_button(1, RIGHT);
-        control.button_box.enable_button(2, BOTTOM);
+        control.button_box.enable_button(2, RIGHT);
+        control.button_box.enable_button(1, BOTTOM);
     }
 }
